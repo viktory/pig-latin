@@ -4,33 +4,6 @@ import ArrayBasedStrategy from '../../../src/PigTransformer/strategies/ArrayBase
 import InvalidWordsDelimitersCounts from '../../../src/PigTransformer/exceptions/InvalidWordsDelimitersCounts';
 
 const strategy = new ArrayBasedStrategy();
-describe('Tests for findDelimiters', () => {
-  test('Zero delimiter', () => {
-    expect((strategy as any).findDelimiters('testString')).toEqual([]);
-  });
-
-  test('One delimiter', () => {
-    expect((strategy as any).findDelimiters('test string')).toEqual([' ']);
-    expect((strategy as any).findDelimiters('test\tstring')).toEqual(['\t']);
-    expect((strategy as any).findDelimiters('test\nstring')).toEqual(['\n']);
-    expect((strategy as any).findDelimiters('another-testString')).toEqual(['-']);
-    expect((strategy as any).findDelimiters(' testString')).toEqual([' ']);
-  });
-
-  test('Simple delimiters combination', () => {
-    expect(
-      (strategy as any).findDelimiters('Lorem ipsum, or lipsum as-it-is sometimes\nknown, is\tdummy text. ')
-    ).toEqual([' ', ' ', ' ', ' ', '-', '-', ' ', '\n', ' ', '\t', ' ', ' ']);
-  });
-
-  test('Complex delimiters combination', () => {
-    expect(
-      (strategy as any).findDelimiters(
-        ' --- Lorem    ipsum,  -  -- or lipsum \n as-it-is sometimes\n\t   \n\n\nknown, is\t-dummy text. '
-      )
-    ).toEqual([' --- ', '    ', '  -  -- ', ' ', ' \n ', '-', '-', ' ', '\n\t   \n\n\n', ' ', '\t-', ' ', ' ']);
-  });
-});
 
 describe('Tests for simplifyDelimiters', () => {
   test('One delimiter', () => {
@@ -94,50 +67,6 @@ describe('Tests for concat', () => {
 
   test('Default case words === delimiters', () => {
     expect((strategy as any).concat(['a', 'b', 'c'], [' ', '-', '\n'])).toEqual('a b-c\n');
-  });
-});
-
-describe('Tests for endsWith and beginsWith', () => {
-  describe('Tests for beginsWith', () => {
-    test('Test beginsWith', () => {
-      expect(
-        (strategy as any).beginsWith('word', ['any', 'array'])
-      ).toBeFalsy();
-    });
-  });
-
-  describe('Tests for endsWith', () => {
-    test('endsWith is false', () => {
-      expect((strategy as any).endsWith('wordway', ['any', 'array'])).toBeFalsy();
-    });
-
-    test('endsWith is true', () => {
-      expect((strategy as any).endsWith('wordway', ['any', 'array', 'way'])).toBeTruthy();
-    });
-  });
-});
-
-describe('Tests for consonants/vowels as first character', () => {
-  describe('Tests for CONSONANT_VOWEL_LETTERS', () => {
-    test('CONSONANT_VOWEL_LETTERS are always consonants', () => {
-      expect((strategy as any).isConsonantVowelConsonant('y')).toBeTruthy();
-    });
-  });
-
-  describe('Tests for isCharacterConsonant', () => {
-    test('CONSONANT_LETTERS', () => {
-      expect((strategy as any).isCharacterConsonant('b')).toBeTruthy();
-      expect((strategy as any).isCharacterConsonant('n')).toBeTruthy();
-    });
-
-    test('VOWEL_LETTERS', () => {
-      expect((strategy as any).isCharacterConsonant('a')).toBeFalsy();
-      expect((strategy as any).isCharacterConsonant('o')).toBeFalsy();
-    });
-
-    test('CONSONANT_VOWEL_LETTERS', () => {
-      expect((strategy as any).isCharacterConsonant('y')).toBeTruthy();
-    });
   });
 });
 
@@ -211,18 +140,31 @@ describe('Tests for modify', () => {
 
 describe('Tests for transform', () => {
   test('Tests for transform', () => {
-    expect((strategy as any).transform('')).toEqual('');
-    expect((strategy as any).transform('string')).toEqual('tringsay');
-    expect((strategy as any).transform('simple string')).toEqual('implesay tringsay');
-    expect((strategy as any).transform('simple-string')).toEqual('implesay-tringsay');
+    expect(strategy.transform('')).toEqual('');
+    expect(strategy.transform('string')).toEqual('tringsay');
+    expect(strategy.transform('simple string')).toEqual('implesay tringsay');
+    expect(strategy.transform('simple-string')).toEqual('implesay-tringsay');
+    expect(strategy.transform('simpleway-string')).toEqual('simpleway-tringsay');
     expect(
-      (strategy as any).transform('simple-string\nAncient Greek. ')
-    ).toEqual('implesay-tringsay\nAncientway Reekgay. ');
+      strategy.transform('simple-string\nAncient   Greek. ')
+    ).toEqual('implesay-tringsay\nAncientway   Reekgay. ');
     expect(
-      (strategy as any).transform('  simple-string\nAncient Greek')
+      strategy.transform('  simple-string\nAncient Greek')
     ).toEqual('  implesay-tringsay\nAncientway Reekgay');
     expect(
-      (strategy as any).transform('  simple-string\nAncient Greek?-- ')
+      strategy.transform('  simple-string\nAncient Greek?-- ')
     ).toEqual('  implesay-tringsay\nAncientway Reekgay?-- ');
+    expect(
+      strategy.transform('  simple-string\nAncientway Greek')
+    ).toEqual('  implesay-tringsay\nAncientway Reekgay');
+    expect(
+      strategy.transform('  simple-string\nAncien.tway    Greek')
+    ).toEqual('  implesay-tringsay\nAncien.tway    Reekgay');
+    expect(
+      strategy.transform('simple-string\nAncient Greekway. ')
+    ).toEqual('implesay-tringsay\nAncientway Greekway. ');
+    expect(
+      strategy.transform('Greekway.')
+    ).toEqual('Greekway.');
   });
 });
