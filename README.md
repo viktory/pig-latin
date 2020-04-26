@@ -18,6 +18,7 @@ It is my the most favorite algorithm, because it was designed in classical acade
 Separate result make the algorithm easier: punctuation and capitalization is relied on origin and origin is newer modified. However, separate result reduce the memory usage. So in ideal I would get rid of separate `result` variable.
 
 **Time complexity** - O(n)
+
 **Memory complexity** = 2 * O(n)
 
 ### 'Array Based' algorithm
@@ -27,6 +28,7 @@ Separate result make the algorithm easier: punctuation and capitalization is rel
 It should not be used at all :smile:.
 
 **Time complexity** - 2 * O(n) + O(m) - if complexity of str.replace is O(n)
+
 **Memory complexity** = 2 * O(n)
 
 ### 'Mixed' algorithm
@@ -37,8 +39,9 @@ It should not be used at all :smile:.
 2. Punctuation is always be moved in 3 chars to the end of the word (postfix `way` for vowel-words and `firstConsonant+ay` for consonant-words) (if not `way`-ended word). `WordModifierCommand.putSpecialCharacters` could be optimized.
 
 **Time complexity** - O(n)
+
 **Memory complexity** = 2 * O(n)
 
 ------
 ### Development time
-Approximate 8-10 hours for bootstrapping the project, all 3 types of algorithms and tests. Approximately half of the time was spent on 'StringBased' logic and refactoring.
+Approximate 8-10 hours for bootstrapping the project and all its settings, all 3 types of algorithms and tests. Approximately half of the time was spent on 'StringBased' logic and refactoring.
