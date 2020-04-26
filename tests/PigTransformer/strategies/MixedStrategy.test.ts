@@ -1,8 +1,9 @@
 /* eslint @typescript-eslint/no-explicit-any: [0] */
 
-import StringBasedStrategy from '../../../src/PigTransformer/strategies/StringBasedStrategy';
+import MixedStrategy from '../../../src/PigTransformer/strategies/MixedStrategy';
+import WordModifierCommand from '../../../src/PigTransformer/commands/WordModifierCommand';
 
-const strategy = new StringBasedStrategy();
+const strategy = new MixedStrategy(new WordModifierCommand());
 
 describe('Tests for transform', () => {
   test('Tests for transform', () => {

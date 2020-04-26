@@ -17,5 +17,8 @@ describe('Basic tests for transform', () => {
     expect(
       transform('   this is TeSt strigway.?', 'StringBased' as unknown as PigStrategies)
     ).toEqual('   histay isway EsTtay strigway.?');
+    expect(
+      transform('   this is TeSt strigway.?', 'Mixed' as unknown as PigStrategies)
+    ).toEqual('   histay isway EsTtay strigway.?');
   });
 });
